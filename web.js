@@ -1,26 +1,24 @@
-const express = require('express')
-const path = require('path')
-const app = express()
+const express = require('express');
+const path = require('path');
+const app = express();
+const http = require('http').createServer(app);
+const PORT = 8001
 
+// CORS 이슈 해결
 app.use(express.json());
-var cors = require('cors');
+const cors = require('cors');
 app.use(cors());
-/*
-app.use(express.static(path.join(__dirname, '/build')))
 
-app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, '/build/index.html'))
+app.use(express.static(path.join(__dirname, '/views')));
+
+app.get('/', (res, req) => {
+  req.sendFile(path.join(__dirname, '/views/index.html'));
 });
-*/
 
+app.get('*', (res, req) => {
+  req.sendFile(path.join(__dirname, '/views/index.html'));
+});
 
-app.set('views', __dirname + '/build');
-app.set('view engine', 'ejs')
-app.get('/', (req, res) => {
-  res.render('index')
-})
-
-
-app.listen(8001, function(){
-    console.log('listeing on 8001')
-})
+http.listen(PORT, () => {
+  console.log(`Listening on ${PORT}`);
+});
